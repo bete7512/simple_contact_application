@@ -16,7 +16,7 @@ exports.createContact = async (req, res) => {
     res.status(400).json({ success: false, message: err.message });
   }
 };
-
+//https://localhost:3000/api/contacts/ get request
 exports.getContacts = async (req, res) => {
   try {
     const contacts = await Contact.find({ user: req.user._id });
@@ -25,4 +25,56 @@ exports.getContacts = async (req, res) => {
     res.status(500).json({ success: false, message: err.message });
   }
 };
+
+exports.getContactsById = async (req, res) => {
+  try {
+    const contact = await Contact.findById(req.params.id);
+    if (!contact) {
+      return res.status(404).json({ success: false, message: 'Contact not found' });
+    }
+    if (String(contact.user) !== String(req.user._id)) {
+      return res.status(401).json({ success: false, message: 'Unauthorized' });
+    }
+    res.status(200).json({ success: true, message: 'Contact retrieved successfully', data: contact });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+}
+
+exports.editContact = async (req, res) => {
+  const { name, email, phone } = req.body;
+  try {
+    const contact = await Contact.findById(req.params.id);
+    if (!contact) {
+      return res.status(404).json({ success: false, message: 'Contact not found' });
+    }
+    if (String(contact.user) !== String(req.user._id)) {
+      return res.status(401).json({ success: false, message: 'Unauthorized' });
+    }
+    contact.name = name;
+    contact.email = email;
+    contact.phone = phone;
+    await contact.save();
+    res.status(200).json({ success: true, message: 'Contact updated successfully', data: contact });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+}
+
+exports.deleteContact = async (req, res) => {
+  try {
+    const contact = await Contact.findById(req.params.id);
+    if (!contact) {
+      return res.status(404).json({ success: false, message: 'Contact not found' });
+    }
+    if (String(contact.user) !== String(req.user._id)) {
+      return res.status(401).json({ success: false, message: 'Unauthorized' });
+    }
+    await contact.remove();
+    res.status(200).json({ success: true, message: 'Contact deleted successfully' });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+}
+
 

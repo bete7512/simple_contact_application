@@ -17,7 +17,7 @@ module.exports = async (req, res, next) => {
   }
   try {
     const token = authorization.replace('Bearer ', '');
-    const { userId } = jwt.verify(token, process.env.JWT_SECRET);
+    const { userId } = jwt.verify(token, 'process.env.JWT_SECRET');
     const user = await User.findById(userId);
     if (!user) {
       return res.status(401).json({ success: false, message: 'User not found' });

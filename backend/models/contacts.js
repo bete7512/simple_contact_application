@@ -11,6 +11,7 @@ const contactSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true },
   phone: { type: String },
+  tag: { type: String, enum: ['family', 'friend', 'work', 'other'], default: 'other' },
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }
 });
 
