@@ -1,6 +1,12 @@
-// contactController.js (Controller)
 const Contact = require('../models/Contact');
-
+/**
+ * 
+ * @param {*} req I mentioned this in authController.js
+ * @param {*} res the same thing for res
+ * here below are function to create contact, get contacts , edit contact and delete contact 
+ * I will explain you how to use them in frontend
+ * happy coding
+ */
 exports.createContact = async (req, res) => {
   const { name, email, phone } = req.body;
   try {
